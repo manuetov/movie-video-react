@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
 import MovieCard from "./components/MovieCard";
+import YouTube from 'react-youtube';
 import './app.css'
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
@@ -19,8 +20,9 @@ const App = () => {
   // GET /search/movie
   const [searchMovie, setSearchMovie] = useState("");
   const [selectedMovie, setSelectedMovie] = useState ({})
+  const [playTrailer, setPlayTrailer] = useState(false)
 
-
+  // all movies
   const getMovies = async (searchMovie) => {
     // solo si se hace una busqueda sino se muestra discover/movie
     const type = searchMovie ? "search" : "discover";
@@ -32,9 +34,28 @@ const App = () => {
     });
     // console.log(results);
     setIsFetching(false);
-    setSelectedMovie(results[1])
+    let randomResults = Math.floor(Math.random() * results.length);
+    setSelectedMovie(results[randomResults])
     setMovies(results);
   };
+
+  // https://api.themoviedb.org/3/movie/157336?api_key={api_key}&append_to_response=videos
+  // select on movie
+  const getMovie = async (id) => {
+    const {data} = await axios.get(`${API_URL}/movie/${id}`, {
+      params: {
+        api_key: process.env.REACT_APP_API_KEY,
+        append_to_response: 'videos',
+      }
+    })
+    return data    
+  }
+
+  const selectMovie = async (movie) => {
+    const dataMovie = await getMovie(movie.id)
+    // console.log('data', dataMovie)
+    setSelectedMovie(dataMovie)
+  }
 
   useEffect(() => {
     getMovies();
@@ -55,9 +76,19 @@ const App = () => {
       <MovieCard 
         key={eachMovie.id} 
         movie={eachMovie}
-        selectedMovie={setSelectedMovie} 
+        selectMovie={selectMovie} 
       />
     ));
+  
+  const renderTrailer = () => {
+    const trailer = selectedMovie.videos.results.find((eachVideo) => eachVideo.name === 'Official Trailer')
+    return  (
+      <YouTube 
+        videoId = {trailer.key} 
+      />
+    )
+  }
+  
 
   return (
     <Container fluid>
@@ -66,15 +97,18 @@ const App = () => {
         <header>
         <div className="portada" style={{backgroundImage: `url('${IMAGE_PATH}${selectedMovie.backdrop_path}')`}}>
             <div className="portada-content">
-              <Button variant="outline-info">Play Trailer</Button>
+              {/* renderTrailer */}
+              {playTrailer && selectedMovie.videos ? renderTrailer() : null}
+              <Button variant="outline-info" onClick={() => setPlayTrailer(true)}>Play Trailer</Button>
               <h1>{selectedMovie.title}</h1>
               {selectedMovie.overview ? <p>{selectedMovie.overview}</p> : null}
             </div>
           </div>
           {/* <Form */}
+        </header>
           <form onSubmit={searchMoviesSubmit}>
               <Form.Control 
-                className="h-25 d-inline-block m-3 text-info"
+                className="h-50 d-inline-block m-3 text-info"
                 style={{ width: 500, backgroundColor: "rgba(0, 0, 255, 0.1)" }}
                 type="text"
                 placeholder="Buscar peli"
@@ -89,7 +123,6 @@ const App = () => {
               </Button>
           </form>
           
-        </header>
         {renderMovies()}
       </Row>
     </Container>
@@ -101,8 +134,3 @@ export default App;
 
 
 
-/* <form className="form" onSubmit={searchMoviesSubmit}>
-      <input className="search" type="text" id="search"
-      onChange={(e) => setSearchMovie(e.target.value)}/>
-      <button className="submit-search" type="submit"><i className="fa fa-search"></i></button>
-    </form> */

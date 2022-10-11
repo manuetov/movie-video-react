@@ -1,8 +1,8 @@
 import React from "react";
 import Card from "react-bootstrap/Card";
 
-const MovieCard = ({ movie, selectedMovie }) => {
-  console.log(movie);
+const MovieCard = ({ movie, selectMovie}) => {
+//   console.log(movie);
   // https://image.tmdb.org/t/p/w500/kqjL17yufvn9OVLyXYpvtyrFfak.jpg
   const img_URL = "https://image.tmdb.org/t/p/w500";
 
@@ -10,7 +10,7 @@ const MovieCard = ({ movie, selectedMovie }) => {
     
       <Card className='card m-3' 
          style={{ width: "18rem" }} 
-         onClick={() => selectedMovie(movie)}
+         onClick={() => selectMovie(movie)}
       >
         {movie.poster_path ? (
           <Card.Img src={`${img_URL}${movie.poster_path}`} alt="Card image" />
