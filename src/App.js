@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
 import MovieCard from "./components/MovieCard";
-
+import './app.css'
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
@@ -9,13 +9,17 @@ import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 
 const App = () => {
+  // https://developers.themoviedb.org/3/discover/movie-discover
+  const API_URL = "https://api.themoviedb.org/3";
+  // https://www.themoviedb.org/talk/53c11d4ec3a3684cf4006400
+  const IMAGE_PATH = 'http://image.tmdb.org/t/p/original/'
+
   const [movies, setMovies] = useState([]);
   const [isFetching, setIsFetching] = useState(false);
   // GET /search/movie
   const [searchMovie, setSearchMovie] = useState("");
+  const [selectedMovie, setSelectedMovie] = useState ({})
 
-  // https://developers.themoviedb.org/3/discover/movie-discover
-  const API_URL = "https://api.themoviedb.org/3";
 
   const getMovies = async (searchMovie) => {
     // solo si se hace una busqueda sino se muestra discover/movie
@@ -28,6 +32,7 @@ const App = () => {
     });
     // console.log(results);
     setIsFetching(false);
+    setSelectedMovie(results[1])
     setMovies(results);
   };
 
@@ -44,9 +49,14 @@ const App = () => {
     e.preventDefault();
     getMovies(searchMovie);
   };
+
   const renderMovies = () =>
     movies.map((eachMovie) => (
-      <MovieCard key={eachMovie.id} movie={eachMovie} />
+      <MovieCard 
+        key={eachMovie.id} 
+        movie={eachMovie}
+        selectedMovie={setSelectedMovie} 
+      />
     ));
 
   return (
@@ -54,27 +64,31 @@ const App = () => {
       <h1 className=''>NETFLUXKIX</h1>
       <Row className="d-flex justify-content-center">
         <header>
+        <div className="portada" style={{backgroundImage: `url('${IMAGE_PATH}${selectedMovie.backdrop_path}')`}}>
+            <div className="portada-content">
+              <Button variant="outline-info">Play Trailer</Button>
+              <h1>{selectedMovie.title}</h1>
+              {selectedMovie.overview ? <p>{selectedMovie.overview}</p> : null}
+            </div>
+          </div>
+          {/* <Form */}
           <form onSubmit={searchMoviesSubmit}>
-            {/* <Form */}
               <Form.Control 
-                className="h-25 d-inline-block m-5"
+                className="h-25 d-inline-block m-3 text-info"
                 style={{ width: 500, backgroundColor: "rgba(0, 0, 255, 0.1)" }}
                 type="text"
                 placeholder="Buscar peli"
                 onChange={(e) => setSearchMovie(e.target.value)}
               />
               <Button
-                className="m-3"
                 style={{ width: 120 }}
                 variant="primary"
                 type="submit"
               >
                 Buscar
               </Button>
-
           </form>
-
-          {searchMovie}
+          
         </header>
         {renderMovies()}
       </Row>
