@@ -35,7 +35,7 @@ const App = () => {
     // console.log(results);
     setIsFetching(false);
     let randomResults = Math.floor(Math.random() * results.length);
-    setSelectedMovie(results[randomResults])
+    selectMovie(results[randomResults])
     setMovies(results);
   };
 
@@ -53,7 +53,7 @@ const App = () => {
 
   const selectMovie = async (movie) => {
     const dataMovie = await getMovie(movie.id)
-    // console.log('data', dataMovie)
+    console.log('data', dataMovie)
     setSelectedMovie(dataMovie)
   }
 
@@ -85,6 +85,14 @@ const App = () => {
     return  (
       <YouTube 
         videoId = {trailer.key} 
+        className = {'youtube-container'}
+        const opts = {{
+          width: '100%',
+          height: '100%',
+          playerVars: {
+            autoplay: 1
+          }
+        }}
       />
     )
   }
@@ -97,6 +105,10 @@ const App = () => {
         <header>
         <div className="portada" style={{backgroundImage: `url('${IMAGE_PATH}${selectedMovie.backdrop_path}')`}}>
             <div className="portada-content">
+              {playTrailer ? <Button variant='dark'
+                className="position-absolute top-0 start-50 translate-middle"
+                style={{zIndex: '100'}}  
+                onClick={() => setPlayTrailer(false)}>Cerrar</Button> : null}
               {/* renderTrailer */}
               {playTrailer && selectedMovie.videos ? renderTrailer() : null}
               <Button variant="outline-info" onClick={() => setPlayTrailer(true)}>Play Trailer</Button>
