@@ -23,6 +23,7 @@ const MovieCard = ({ movie, selectMovie }) => {
         <Card.Title className="p-2 fs-3 fw-bold text-danger">
           {movie.title}
         </Card.Title>
+        <Card.Subtitle className="pb-2 text-white">{movie.release_date}</Card.Subtitle>
         <Card.Text>{truncate(movie?.overview, 100)}</Card.Text>
       </Card.Body>
     </Card>

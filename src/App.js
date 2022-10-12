@@ -42,7 +42,7 @@ const App = () => {
   
   useEffect(() => {
     getMovies();
-  }, []);
+  },[]);
 
   // https://api.themoviedb.org/3/movie/157336?api_key={api_key}&append_to_response=videos
   // select on movie
@@ -114,14 +114,16 @@ const App = () => {
           <div className="portada" style={{backgroundImage: `url('${IMAGE_PATH}${selectedMovie.backdrop_path}')`}}>
             <div className="portada-content">
               {playTrailer ? <Button variant='danger'
-                className="position-absolute top-0 start-50 translate-middle"
+                className="position-absolute top-0 start-50 translate-middle fw-bold"
                 style={{zIndex: '100'}}  
                 onClick={() => setPlayTrailer(false)}>Cerrar</Button> : null}
               {/* renderTrailer */}
               {playTrailer && selectedMovie.videos ? renderTrailer() : null}
-              <Button variant="outline-info" onClick={() => setPlayTrailer(true)}>Play Trailer</Button>
-              <h1>{selectedMovie.title}</h1>
-              {selectedMovie.overview ? <p>{selectedMovie.overview}</p> : null}
+              <Button variant="outline-info fw-bold p-2" onClick={() => setPlayTrailer(true)}>Play Trailer</Button>
+              <div className="portada-desc  p-2">
+              <h1 className='text-danger fw-bold'>{selectedMovie.title}</h1>
+                {selectedMovie.overview ? <p>{selectedMovie.overview}</p> : null}
+              </div>
             </div>
           </div>
         </header>
@@ -129,7 +131,7 @@ const App = () => {
           <form onSubmit={searchMoviesSubmit}>
               <Form.Control 
                 className="h-50 d-inline-block m-3 text-white"
-                style={{ width: 500, backgroundColor: "rgba(0, 0, 255, 0.1)" }}
+                style={{ width: 420, backgroundColor: "rgba(0, 0, 255, 0.1)" }}
                 type="text"
                 placeholder="Indroduce una palabra de la película que quieres buscar"
                 onChange={(e) => setSearchMovie(e.target.value)}
