@@ -1,6 +1,7 @@
 body {
    background: #171717 !important;
-   color: rgb(93, 59, 206) !important;
+   color: rgb(246, 186, 251) !important;
+
 }
 
 .portada{
@@ -17,6 +18,10 @@ body {
    margin-left: 30px;
    max-width: 70%;
    padding-bottom: 50px;
+}
+
+form{
+   text-align: center;
 }
 
 .card {
