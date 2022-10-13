@@ -13,14 +13,14 @@ const MovieCard = ({ movie, selectMovie }) => {
   return (
     <Card
       className="card bg-dark m-2"
-      style={{ width: "18rem" }}
+      style={{ width: "14rem" }}
       onClick={() => selectMovie(movie)}
     >
       {movie.poster_path ? (
-        <Card.Img src={`${img_URL}${movie.poster_path}`} alt="Card image" />
+        <Card.Img src={`${img_URL}${movie.poster_path}`} alt="Card image" className='mt-3' />
       ) : null}
       <Card.Body>
-        <Card.Title className="p-2 fs-3 fw-bold text-danger">
+        <Card.Title className="fs-4 pb-2 fw-bold text-danger">
           {movie.title}
         </Card.Title>
         <Card.Subtitle className="pb-2 text-white">{movie.release_date}</Card.Subtitle>
