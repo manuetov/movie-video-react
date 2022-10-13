@@ -10,11 +10,17 @@ const MovieCard = ({ movie, selectMovie }) => {
     return str?.length > n ? str.substr(0, n - 1) + "..." : str;
   }
 
+  const handleSroll = () => {
+    selectMovie(movie)
+    window.scrollTo({top: 0, left: 0, behavior: 'smooth'});
+    
+  }
+  
   return (
     <Card
       className="card bg-dark m-2"
       style={{ width: "14rem" }}
-      onClick={() => selectMovie(movie)}
+      onClick={handleSroll} 
     >
       {movie.poster_path ? (
         <Card.Img src={`${img_URL}${movie.poster_path}`} alt="Card image" className='mt-3' />
